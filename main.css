@@ -1,0 +1,43 @@
+header {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+header div.portrait {
+    width: 200px;
+    margin: 5px;
+}
+
+header div.profile {
+    width: calc(60% - 10px);
+    margin: 5px;
+}
+
+header div.social {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+header div.social a {
+    margin: 5px;
+}
+
+header div.social img {
+    margin: 5px;
+}
+
+header div.social p {
+    margin: 5px;
+}
+
+main {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+main div.contents {
+    width: calc(80% - 10px);
+    margin: 5px;
+}
