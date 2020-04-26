@@ -64,7 +64,7 @@ Linux ubuntu 5.3.0-1014-raspi2 #16-Ubuntu SMP Tue Nov 26 11:18:23 UTC 2019 aarch
 まずはwpa_supplicantの設定。
 
 ```sh
-% sudo wpa_passphrase <SSID> <パスフレーズ> | tee -a /etc/wpa_supplicant/wpa_supplicant-wlan0.conf
+% sudo wpa_passphrase <SSID> <パスフレーズ> | sudo tee -a /etc/wpa_supplicant/wpa_supplicant-wlan0.conf
 ```
 
 `wpa_supplicant.conf`のマニュアルを見ながら、フロントエンド向けグループ設定、ステルス探す設定、認証方式、暗号化方式を追記して、コメントアウトされている平文パスワードを削除します。
