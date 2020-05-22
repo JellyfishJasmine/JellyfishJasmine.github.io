@@ -1,4 +1,4 @@
-# AWSでMySQLサーバを立ち上げるまで
+# AWSへのユーザ登録
 
 事情により同じ作業を毎年行うのですが、すぐに忘れてしまうトリアタマなので
 忘備録です。
@@ -25,14 +25,10 @@ MySQLを立てた後にSQL文の投げ方の違いによるパフォーマンス
 参考：Linuxインスタンスでのユーザーアカウントの管理
 <https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/managing-users.html>
 
-念のためパッケージのアップデートをした後、MySQLのインストール。
-どうやらmariadbが使えるようなので、これと、コネクタ関係をまとめてインストールします。
+念のためパッケージのアップデート。
 
 ```sh
 % sudo yum update
-% sudo yum search mysql
-% sudo yum install mysql
-% sudo yum install mysql-connector*
 ```
 
 タイムゾーンを変更します。以下のコマンドで存在を確認後、`ZONE="Japan"`に変更。
@@ -66,3 +62,36 @@ MySQLを立てた後にSQL文の投げ方の違いによるパフォーマンス
 % chmod 0600 .ssh/authorized_keys
 % cat /tmp/hogehoge.pem.pub > .ssh/authorized_keys
 ```
+
+たくさんユーザ登録をする時には、スクリプトを書いて処理してます。
+
+```sh
+#!/bin/bash
+
+if [ $# -eq 2 ]; then
+    files=$1/*
+    names=(`cat "$2"`)
+else
+    echo "Search files in the current directory."
+    files="./*"
+    names=
+fi
+
+ln=0
+for filepath in ${files}; do
+    if [ -n "${names}" ]; then
+        name=${names[${ln}]}
+        `sudo adduser -m ${name}`
+        `sudo mkdir -p /home/${name}/.ssh`
+        `sudo touch /home/${name}/.ssh/authorized_keys`
+        `sudo chmod 0600 /home/${name}/.ssh/authorized_keys`
+        `cat ${filepath} | sudo tee -a /home/${name}/.ssh/authorized_keys`
+        `sudo chown -R ${name}.${name} /home/${name}/.ssh`
+        let ln++
+    fi
+done
+
+exit 0
+```
+
+スクリプト実行時、第1引数に鍵ファイルを置いてあるディレクトリ名、第2引数にユーザ名一覧が書いてあるファイル名を指定して使います。
